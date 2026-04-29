@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ferretería Albaladejo</title>
+
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="logo">🔧</div>
+    <div>
+      <h1>FERRETERÍA <span>ALBALADEJO</span></h1>
+      <p>Selecciona y reserva por WhatsApp</p>
+    </div>
+  </div>
+</header>
+
+<!-- NOMBRE -->
+<section class="nombre-section">
+  <label>👤 Nombre o empresa</label>
+  <input type="text" id="clienteNombre" placeholder="Tu nombre...">
+</section>
+
+<!-- PRODUCTOS -->
+<main id="productosGrid" class="productos-grid"></main>
+
+<!-- CART -->
+<div class="cart-bar">
+  <div>
+    <p>Total</p>
+    <h2 id="total">0€</h2>
+  </div>
+  <button onclick="enviarWhatsApp()">Reservar</button>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
