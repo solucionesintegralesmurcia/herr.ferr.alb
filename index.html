@@ -4,413 +4,201 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ferretería Albaladejo — Ofertas</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
 <style>
-:root {
-  --orange:#FF4D00; --orange-dark:#cc3d00; --yellow:#FFB800;
-  --dark:#111; --darker:#0a0a0a; --mid:#1e1e1e;
-  --card:#191919; --border:#2a2a2a; --text:#f0f0f0;
-  --muted:#777; --green:#00c853; --red:#ff3d3d;
+:root{
+--orange:#FF4D00;--dark:#111;--card:#191919;--border:#2a2a2a;
+--text:#f0f0f0;--muted:#777;--green:#00c853;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'DM Sans',sans-serif;background:var(--darker);color:var(--text);min-height:100vh;}
+body{font-family:'DM Sans',sans-serif;background:#0a0a0a;color:#fff}
 
-/* HERO compacto */
-.hero{background:linear-gradient(160deg,#0f0600 0%,#1c0900 55%,#0a0a0a 100%);border-bottom:2px solid var(--orange);padding:10px 16px;position:relative;overflow:hidden;}
-.hero::before{content:'';position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:300px;height:200px;background:radial-gradient(circle,rgba(255,77,0,.15) 0%,transparent 68%);pointer-events:none;}
-.hero-inner{display:flex;align-items:center;gap:12px;max-width:680px;margin:0 auto;}
-.hero-logo{width:46px;height:46px;border-radius:50%;object-fit:cover;border:2px solid var(--orange);flex-shrink:0;display:block;}
-.hero-logo-placeholder{width:46px;height:46px;border-radius:50%;border:2px solid var(--orange);display:flex;align-items:center;justify-content:center;font-size:20px;background:#1a0800;flex-shrink:0;}
-.hero-text{flex:1;}
-.hero-tagline{display:inline-block;background:var(--orange);color:white;font-size:9px;font-weight:700;letter-spacing:2px;padding:2px 8px;border-radius:2px;margin-bottom:2px;text-transform:uppercase;}
-.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(20px,5vw,32px);letter-spacing:2px;line-height:1;color:white;}
-.hero h1 span{color:var(--orange);}
-.hero-sub{color:var(--muted);font-size:11px;margin-top:1px;}
-.hero-comercial{font-size:11px;color:var(--orange);margin-top:2px;font-weight:600;}
+/* HERO */
+.hero{padding:12px;border-bottom:2px solid var(--orange);text-align:center}
+.hero h1{font-family:'Bebas Neue';font-size:28px}
+.hero span{color:var(--orange)}
 
-/* FLASH banner global */
-.flash-section{max-width:680px;margin:16px auto 0;padding:0 16px;display:none;}
-.flash-section.active{display:block;}
-.flash-banner{background:linear-gradient(135deg,#2a0800,#1a0a00);border:2px solid var(--orange);border-radius:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
-.flash-left{flex:1;min-width:120px;}
-.flash-label{font-size:10px;font-weight:700;letter-spacing:2px;color:var(--orange);text-transform:uppercase;margin-bottom:2px;}
-.flash-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;}
-.flash-desc{font-size:12px;color:var(--muted);margin-top:1px;}
-.flash-clock{display:flex;gap:5px;align-items:center;flex-shrink:0;}
-.clock-unit{background:#0d0d0d;border:1px solid #3a3a3a;border-radius:7px;padding:6px 8px;text-align:center;min-width:42px;}
-.clock-num{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--orange);line-height:1;}
-.clock-lbl{font-size:8px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:1px;}
-.clock-sep{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--orange);margin-bottom:8px;}
+/* GRID */
+.grid{padding:14px;display:flex;flex-direction:column;gap:14px;max-width:700px;margin:auto}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
+.card.selected{border-color:var(--orange)}
+.name{font-family:'Bebas Neue';font-size:22px}
+.desc{font-size:13px;color:var(--muted)}
+.price{font-size:26px;color:var(--orange);margin:6px 0}
 
-/* NOMBRE */
-.nombre-section{max-width:680px;margin:16px auto 0;padding:0 16px;}
-.nombre-label{font-size:12px;font-weight:700;color:#ccc;letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;display:block;}
-.nombre-wrap{background:#2e2e2e;border:2px solid #555;border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:10px;transition:border-color .2s;}
-.nombre-wrap:focus-within{border-color:var(--orange);}
-.nombre-wrap .icon{font-size:20px;flex-shrink:0;}
-.nombre-wrap input{flex:1;background:none;border:none;outline:none;color:#fff;font-family:'DM Sans',sans-serif;font-size:17px;font-weight:500;}
-.nombre-wrap input::placeholder{color:#888;}
+/* QTY */
+.qty{display:flex;gap:10px;align-items:center}
+.qty button{width:40px;height:40px;font-size:20px;background:none;border:none;color:white}
+.qty span{font-size:18px}
 
-/* PRODUCTOS */
-.productos-grid{max-width:680px;margin:16px auto 0;padding:0 16px;display:flex;flex-direction:column;gap:14px;}
-.producto-card{background:var(--card);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color .2s,transform .15s;position:relative;}
-.producto-card:hover{border-color:#3a3a3a;transform:translateY(-1px);}
-.producto-card.selected{border-color:var(--orange);box-shadow:0 0 0 1px var(--orange);}
-.producto-card.agotado{opacity:.5;pointer-events:none;}
-.card-badge{position:absolute;top:10px;left:10px;background:var(--orange);color:white;font-size:10px;font-weight:700;padding:3px 9px;border-radius:3px;letter-spacing:1px;text-transform:uppercase;z-index:2;}
-.card-badge.stock-lim{background:var(--yellow);color:var(--dark);}
-.card-badge.agotado-badge{background:#444;color:#999;}
-.card-badge.flash-badge{background:linear-gradient(90deg,#ff4d00,#ff9500);animation:flashPulse 1.5s ease-in-out infinite;}
-@keyframes flashPulse{0%,100%{opacity:1;}50%{opacity:.7;}}
-/* imagen cuadrada */
-.card-img-wrap{width:100%;padding-top:100%;position:relative;overflow:hidden;background:#1a1a1a;}
-.card-img-wrap img,.card-img-ph{position:absolute;inset:0;width:100%;height:100%;}
-.card-img-wrap img{object-fit:cover;display:block;}
-.card-img-ph{display:flex;align-items:center;justify-content:center;font-size:64px;background:linear-gradient(135deg,#1a1a1a,#252525);}
-.stock-bar-wrap{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.65);padding:5px 10px;display:flex;align-items:center;gap:8px;}
-.stock-bar-bg{flex:1;height:4px;background:#333;border-radius:2px;}
-.stock-bar-fill{height:4px;background:var(--green);border-radius:2px;transition:width .5s;}
-.stock-bar-fill.low{background:var(--orange);}
-.stock-txt{font-size:11px;color:#ccc;white-space:nowrap;}
-.card-body{padding:13px 16px 16px;}
-.card-ref{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}
-.card-name{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px;line-height:1.1;margin-bottom:4px;}
-.card-desc{font-size:13px;color:var(--muted);margin-bottom:11px;line-height:1.5;}
-.card-pricing{display:flex;align-items:baseline;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
-.price-main{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--orange);letter-spacing:1px;}
-.price-original{font-size:14px;color:var(--muted);text-decoration:line-through;}
-.price-note{font-size:12px;color:var(--yellow);background:rgba(255,184,0,.1);padding:2px 8px;border-radius:4px;}
-/* qty libre */
-.qty-row{display:flex;align-items:center;background:var(--mid);border-radius:10px;overflow:hidden;width:fit-content;}
-.qty-btn{width:44px;height:44px;background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
-.qty-btn:hover{background:var(--orange);color:white;}
-.qty-display{min-width:52px;text-align:center;font-size:18px;font-weight:600;user-select:none;}
-/* qty presets */
-.qty-presets{display:flex;flex-wrap:wrap;gap:8px;}
-.qty-preset-btn{background:var(--mid);border:1.5px solid var(--border);color:var(--text);padding:9px 15px;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all .15s;}
-.qty-preset-btn:hover{border-color:var(--orange);color:var(--orange);}
-.qty-preset-btn.active{background:var(--orange);border-color:var(--orange);color:white;font-weight:700;}
-.qty-step-info{font-size:11px;color:var(--muted);margin-top:5px;}
-.qty-step-info b{color:var(--yellow);}
-/* mini flash timer en tarjeta */
-.card-flash-timer{display:flex;gap:4px;align-items:center;margin-top:9px;flex-wrap:wrap;}
-.card-flash-timer .cfu{background:#0d0d0d;border:1px solid var(--orange);border-radius:5px;padding:4px 7px;text-align:center;min-width:36px;}
-.card-flash-timer .cfn{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--orange);line-height:1;}
-.card-flash-timer .cfl{font-size:7px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
-.card-flash-timer .cfsep{font-family:'Bebas Neue',sans-serif;font-size:14px;color:var(--orange);margin-bottom:6px;}
-.card-subtotal{margin-top:9px;font-size:13px;color:var(--muted);min-height:18px;}
-.card-subtotal span{color:var(--green);font-weight:600;}
-.envio-tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--green);background:rgba(0,200,83,.1);border:1px solid rgba(0,200,83,.2);padding:3px 9px;border-radius:4px;margin-top:7px;}
-.envio-tag.no{color:#f88;background:rgba(255,100,100,.08);border-color:rgba(255,100,100,.15);}
+/* CART */
+.cart{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:2px solid var(--orange);padding:10px;display:flex;justify-content:space-between}
+.btn{background:#25D366;color:white;border:none;padding:10px 16px;border-radius:10px}
 
-/* CART BAR */
-.cart-bar{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(to top,#0c0c0c,#111);border-top:2px solid var(--orange);padding:10px 16px 12px;z-index:100;box-shadow:0 -8px 30px rgba(0,0,0,.7);}
-.cart-bar-inner{max-width:680px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;}
-.cart-info{flex:1;}
-.cart-label{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
-.cart-iva-lines{font-size:11px;color:var(--muted);margin-top:1px;display:none;}
-.cart-iva-lines.visible{display:block;}
-.cart-total{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--orange);letter-spacing:1px;line-height:1;margin-top:1px;}
-.cart-items-count{font-size:12px;color:var(--muted);}
-.btn-whatsapp{background:#25D366;color:white;border:none;padding:13px 18px;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;white-space:nowrap;transition:background .2s,transform .1s;flex-shrink:0;}
-.btn-whatsapp:hover{background:#1da851;transform:scale(1.03);}
-.btn-whatsapp:active{transform:scale(.97);}
-.spacer{height:110px;}
-.admin-trigger{text-align:center;padding:22px 20px 6px;max-width:680px;margin:0 auto;}
-.admin-trigger button{background:none;border:1px solid #1a1a1a;color:#222;font-size:11px;padding:5px 12px;border-radius:4px;cursor:pointer;letter-spacing:1px;font-family:'DM Sans',sans-serif;}
-.admin-trigger button:hover{color:#444;border-color:#333;}
-
-/* NOTIF */
-.notif{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--green);color:white;padding:10px 22px;border-radius:20px;font-size:14px;font-weight:600;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;}
-.notif.show{opacity:1;}
+/* ADMIN */
+.admin{padding:20px;max-width:800px;margin:auto}
+input{width:100%;margin:4px 0;padding:6px;background:#222;border:1px solid #333;color:#fff}
 </style>
 </head>
+
 <body>
 
-<div class="hero">
-  <div class="hero-inner">
-    <div id="heroLogoWrap"><div class="hero-logo-placeholder">🔧</div></div>
-    <div class="hero-text">
-      <div class="hero-tagline">🔥 Ofertas del día</div>
-      <h1 id="heroTitle">FERRETERÍA <span>ALBALADEJO</span></h1>
-      <p class="hero-sub" id="heroSub">Selecciona y reserva por WhatsApp</p>
-      <p class="hero-comercial" id="heroComercial"></p>
-    </div>
-  </div>
-</div>
-
-<!-- FLASH GLOBAL -->
-<div class="flash-section" id="flashSection">
-  <div class="flash-banner">
-    <div class="flash-left">
-      <div class="flash-label">⚡ Oferta Flash</div>
-      <div class="flash-title" id="flashTitle">Oferta especial</div>
-      <div class="flash-desc" id="flashDesc"></div>
-    </div>
-    <div class="flash-clock">
-      <div class="clock-unit"><div class="clock-num" id="cd-d">00</div><div class="clock-lbl">días</div></div>
-      <span class="clock-sep">:</span>
-      <div class="clock-unit"><div class="clock-num" id="cd-h">00</div><div class="clock-lbl">h</div></div>
-      <span class="clock-sep">:</span>
-      <div class="clock-unit"><div class="clock-num" id="cd-m">00</div><div class="clock-lbl">min</div></div>
-      <span class="clock-sep">:</span>
-      <div class="clock-unit"><div class="clock-num" id="cd-s">00</div><div class="clock-lbl">seg</div></div>
-    </div>
-  </div>
-</div>
-
-<div class="nombre-section">
-  <label class="nombre-label">👤 ¿Cómo te llamo? Nombre o empresa</label>
-  <div class="nombre-wrap">
-    <span class="icon">✏️</span>
-    <input type="text" id="clienteNombre" placeholder="Tu nombre o empresa…" autocomplete="off">
-  </div>
-</div>
-
-<div class="productos-grid" id="productosGrid"></div>
-<div class="admin-trigger"><button onclick="location.href='admin.html'">···</button></div>
-<div class="spacer"></div>
-
-<div class="cart-bar">
-  <div class="cart-bar-inner">
-    <div class="cart-info">
-      <div class="cart-label">Total pedido</div>
-      <div class="cart-iva-lines" id="cartIvaLines"></div>
-      <div class="cart-total" id="cartTotal">0,00€</div>
-      <div class="cart-items-count" id="cartItems">Sin productos seleccionados</div>
-    </div>
-    <button class="btn-whatsapp" onclick="enviarWhatsApp()">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-      Reservar pedido
-    </button>
-  </div>
-</div>
-
-<div class="notif" id="notif">✓ Pedido enviado</div>
+<div id="tiendaView"></div>
+<div id="adminView" style="display:none;"></div>
 
 <script>
-// ── LEER COMERCIAL DEL ENLACE ─────────────────────────────
-const urlParams = new URLSearchParams(window.location.search);
-const comercialId = urlParams.get('c') || '';
-const comercialNombre = urlParams.get('n') ? decodeURIComponent(urlParams.get('n')) : '';
 
-if (comercialNombre) {
-  document.getElementById('heroComercial').textContent = '👤 Comercial: ' + comercialNombre;
-}
+/* DETECTAR ADMIN */
+const isAdmin = new URLSearchParams(window.location.search).get('admin') === '1';
 
-// ── DATOS ─────────────────────────────────────────────────
-let config = JSON.parse(localStorage.getItem('ferro_config') || '{}');
-config = Object.assign({
-  wa:'34622663157', iva:0, envioGlobal:false,
-  flashActiva:false, flashTitulo:'', flashDesc:'', flashInicio:'', flashFin:'',
-  nombre:'FERRETERÍA ALBALADEJO', sub:'Selecciona y reserva por WhatsApp', logo:null
-}, config);
-
-let productos = JSON.parse(localStorage.getItem('ferro_productos') || 'null') || [
-  {id:1,nombre:'WD-40 500ml',ref:'WD-001',emoji:'🛢️',desc:'Lubricante multiusos profesional. Precio por caja.',coste:5.20,venta:7.50,badge:'oferta',precioAntes:8.90,nota:'caja 12 uds',ventas:0,stock:0,vendidosHoy:0,envio:'si',modoQty:'presets',presets:[12,24,48],qtyMin:1,qtyStep:1,foto:null,esFlash:false,flashInicio:'',flashFin:'',flashTexto:''},
-  {id:2,nombre:'Guantes piel',ref:'GLV-002',emoji:'🧤',desc:'Guantes de protección en piel resistente.',coste:0.80,venta:1.35,badge:'stock',precioAntes:null,nota:'',ventas:0,stock:150,vendidosHoy:0,envio:'',modoQty:'libre',presets:[],qtyMin:1,qtyStep:1,foto:null,esFlash:false,flashInicio:'',flashFin:'',flashTexto:''},
-  {id:3,nombre:'Ventilador industrial',ref:'VNT-003',emoji:'🌀',desc:'Ventilador de alto rendimiento. 3 velocidades.',coste:38,venta:64,badge:'oferta',precioAntes:79,nota:'59,95€ con 3+',ventas:0,stock:8,vendidosHoy:0,envio:'si',modoQty:'presets',presets:[1,3,5],qtyMin:1,qtyStep:1,foto:null,esFlash:false,flashInicio:'',flashFin:'',flashTexto:''},
-  {id:4,nombre:'Carretilla',ref:'CAR-004',emoji:'🛒',desc:'Carretilla de mano reforzada. Carga máx. 200kg.',coste:22,venta:33.90,badge:'',precioAntes:null,nota:'',ventas:0,stock:0,vendidosHoy:0,envio:'',modoQty:'libre',presets:[],qtyMin:1,qtyStep:1,foto:null,esFlash:false,flashInicio:'',flashFin:'',flashTexto:''}
+/* STORAGE */
+let productos = JSON.parse(localStorage.getItem('ferro_productos')||'null')||[
+{id:1,nombre:'WD-40',ref:'WD1',desc:'Lubricante',venta:7.5,stock:10},
+{id:2,nombre:'Guantes',ref:'GL2',desc:'Protección',venta:1.3,stock:50}
 ];
 
-let pedidos = JSON.parse(localStorage.getItem('ferro_pedidos') || '[]');
-let cantidades = {};
+let cantidades={};
 
-// ── HERO ──────────────────────────────────────────────────
-function initHero() {
-  const n = (config.nombre || 'FERRETERÍA ALBALADEJO').toUpperCase();
-  const parts = n.split(' '); const last = parts.pop();
-  document.getElementById('heroTitle').innerHTML = parts.join(' ') + ' <span>' + last + '</span>';
-  document.getElementById('heroSub').textContent = config.sub || '';
-  const wrap = document.getElementById('heroLogoWrap');
-  wrap.innerHTML = config.logo
-    ? '<img class="hero-logo" src="' + config.logo + '" alt="logo">'
-    : '<div class="hero-logo-placeholder">🔧</div>';
+/* GUARDAR */
+function saveAll(){
+localStorage.setItem('ferro_productos',JSON.stringify(productos));
 }
 
-// ── RENDER TIENDA ─────────────────────────────────────────
-function renderTienda() {
-  const grid = document.getElementById('productosGrid');
-  grid.innerHTML = '';
-  productos.forEach(p => {
-    const qty = cantidades[p.id] || 0;
-    const vendidos = p.vendidosHoy || 0;
-    const stockActual = p.stock > 0 ? p.stock - vendidos : Infinity;
-    const agotado = p.stock > 0 && stockActual <= 0;
-    const ahora = new Date();
-    const flashActivo = p.esFlash && p.flashFin && ahora < new Date(p.flashFin) && (!p.flashInicio || ahora >= new Date(p.flashInicio));
+/* TIENDA */
+function renderTienda(){
+const wrap=document.getElementById('tiendaView');
 
-    let badgeHtml = '';
-    if (agotado) badgeHtml = '<div class="card-badge agotado-badge">AGOTADO</div>';
-    else if (flashActivo) badgeHtml = '<div class="card-badge flash-badge">⚡ ' + (p.flashTexto || 'FLASH') + '</div>';
-    else if (p.badge === 'oferta') badgeHtml = '<div class="card-badge">🔥 OFERTA</div>';
-    else if (p.badge === 'stock') badgeHtml = '<div class="card-badge stock-lim">⚡ STOCK LIM.</div>';
+wrap.innerHTML=`
+<div class="hero">
+<h1>FERRETERÍA <span>ALBALADEJO</span></h1>
+</div>
 
-    const imgHtml = p.foto
-      ? '<img src="' + p.foto + '" alt="' + p.nombre + '" onerror="this.style.display=\'none\'">'
-      : '<div class="card-img-ph">' + p.emoji + '</div>';
+<div class="grid" id="grid"></div>
 
-    let stockBarHtml = '';
-    if (p.stock > 0) {
-      const pct = Math.max(0, Math.min(100, (stockActual / p.stock) * 100));
-      stockBarHtml = '<div class="stock-bar-wrap"><div class="stock-bar-bg"><div class="stock-bar-fill ' + (pct < 30 ? 'low' : '') + '" style="width:' + pct + '%"></div></div><span class="stock-txt">' + (agotado ? 'Agotado' : stockActual + ' uds') + '</span></div>';
-    }
+<div class="cart">
+<div id="total">0€</div>
+<button class="btn" onclick="enviar()">WhatsApp</button>
+</div>
 
-    let qtyHtml = '';
-    if (!agotado) {
-      if (p.modoQty === 'presets' && p.presets && p.presets.length) {
-        const btns = p.presets.map(v => '<button class="qty-preset-btn ' + (qty === v ? 'active' : '') + '" onclick="setPreset(' + p.id + ',' + v + ')">' + v + ' ud' + (v > 1 ? 's' : '') + '</button>').join('');
-        qtyHtml = '<div class="qty-presets">' + btns + '</div>';
-      } else {
-        const min = p.qtyMin || 1; const step = p.qtyStep || 1;
-        const stepInfo = (min > 1 || step > 1) ? '<div class="qty-step-info">Mínimo <b>' + min + '</b> · de <b>' + step + '</b> en <b>' + step + '</b></div>' : '';
-        qtyHtml = '<div class="qty-row"><button class="qty-btn" onclick="cambiarQty(' + p.id + ',-1)">−</button><span class="qty-display" id="qty-' + p.id + '">' + qty + '</span><button class="qty-btn" onclick="cambiarQty(' + p.id + ',1)">+</button></div>' + stepInfo;
-      }
-    }
+<button onclick="location.href='?admin=1'" style="margin:20px auto;display:block">···</button>
+`;
 
-    const flashTimerHtml = flashActivo ? '<div class="card-flash-timer" id="flash-timer-' + p.id + '"></div>' : '';
-    const envioVal = p.envio || (config.envioGlobal ? 'si' : 'no');
-    const envioHtml = '<div class="envio-tag ' + (envioVal !== 'si' ? 'no' : '') + '">' + (envioVal === 'si' ? '🚚 Envío incluido' : '📦 Envío no incluido') + '</div>';
-    const precioAntes = p.precioAntes ? '<span class="price-original">' + String(p.precioAntes).replace('.', ',') + '€</span>' : '';
-    const nota = p.nota ? '<span class="price-note">' + p.nota + '</span>' : '';
+const grid=document.getElementById('grid');
 
-    grid.innerHTML += '<div class="producto-card' + (qty > 0 ? ' selected' : '') + (agotado ? ' agotado' : '') + '" id="card-' + p.id + '">' +
-      badgeHtml +
-      '<div class="card-img-wrap">' + imgHtml + stockBarHtml + '</div>' +
-      '<div class="card-body">' +
-        '<div class="card-ref">' + p.ref + '</div>' +
-        '<div class="card-name">' + p.nombre + '</div>' +
-        '<div class="card-desc">' + p.desc + '</div>' +
-        '<div class="card-pricing"><span class="price-main">' + String(p.venta).replace('.', ',') + '€</span>' + precioAntes + nota + '</div>' +
-        qtyHtml +
-        flashTimerHtml +
-        '<div class="card-subtotal" id="sub-' + p.id + '">' + (qty > 0 ? 'Subtotal: <span>' + (qty * p.venta).toFixed(2).replace('.', ',') + '€</span>' : '') + '</div>' +
-        envioHtml +
-      '</div></div>';
-  });
-  updateCart();
-  tickProductFlash();
+productos.forEach(p=>{
+const q=cantidades[p.id]||0;
+
+grid.innerHTML+=`
+<div class="card ${q>0?'selected':''}">
+<div class="name">${p.nombre}</div>
+<div class="desc">${p.desc}</div>
+<div class="price">${p.venta}€</div>
+
+<div class="qty">
+<button onclick="cambiar(${p.id},-1)">-</button>
+<span>${q}</span>
+<button onclick="cambiar(${p.id},1)">+</button>
+</div>
+</div>
+`;
+});
+
+updateCart();
 }
 
-function setPreset(id, v) {
-  cantidades[id] = cantidades[id] === v ? 0 : v;
-  updateCardUI(id); updateCart();
-}
-function cambiarQty(id, delta) {
-  const p = productos.find(x => x.id === id);
-  const min = p.qtyMin || 1; const step = p.qtyStep || 1;
-  let qty = cantidades[id] || 0;
-  if (delta > 0) qty = qty === 0 ? min : qty + step;
-  else { qty -= step; if (qty < min) qty = 0; }
-  const stockActual = p.stock > 0 ? p.stock - (p.vendidosHoy || 0) : Infinity;
-  if (qty > stockActual) qty = stockActual;
-  cantidades[id] = qty;
-  updateCardUI(id); updateCart();
-}
-function updateCardUI(id) {
-  const p = productos.find(x => x.id === id); const qty = cantidades[id] || 0;
-  const card = document.getElementById('card-' + id); if (!card) return;
-  card.classList.toggle('selected', qty > 0);
-  const sub = document.getElementById('sub-' + id);
-  if (sub) sub.innerHTML = qty > 0 ? 'Subtotal: <span>' + (qty * p.venta).toFixed(2).replace('.', ',') + '€</span>' : '';
-  card.querySelectorAll('.qty-preset-btn').forEach(btn => btn.classList.toggle('active', parseInt(btn.textContent) === qty));
-  const disp = document.getElementById('qty-' + id); if (disp) disp.textContent = qty;
-}
-function updateCart() {
-  let base = 0, items = 0;
-  productos.forEach(p => { const q = cantidades[p.id] || 0; base += q * p.venta; items += q; });
-  const iva = config.iva || 0; const ivaAmt = base * iva / 100; const total = base + ivaAmt;
-  const ivaEl = document.getElementById('cartIvaLines');
-  if (iva > 0 && base > 0) { ivaEl.innerHTML = 'Base: ' + base.toFixed(2).replace('.', ',') + '€ + IVA ' + iva + '%: ' + ivaAmt.toFixed(2).replace('.', ',') + '€'; ivaEl.classList.add('visible'); }
-  else ivaEl.classList.remove('visible');
-  document.getElementById('cartTotal').textContent = (iva > 0 ? total : base).toFixed(2).replace('.', ',') + '€';
-  document.getElementById('cartItems').textContent = items > 0 ? items + ' unidad' + (items !== 1 ? 'es' : '') + ' seleccionada' + (items !== 1 ? 's' : '') : 'Sin productos seleccionados';
-}
-
-// ── WHATSAPP ──────────────────────────────────────────────
-function enviarWhatsApp() {
-  const nombre = document.getElementById('clienteNombre').value.trim();
-  if (!nombre) { alert('Por favor, introduce tu nombre o empresa.'); return; }
-  const lineas = []; let base = 0;
-  productos.forEach(p => {
-    const q = cantidades[p.id] || 0;
-    if (q > 0) {
-      const sub = (q * p.venta).toFixed(2);
-      lineas.push('• ' + q + 'x ' + p.nombre + ' (' + p.ref + ') → ' + sub + '€');
-      base += parseFloat(sub);
-      p.ventas = (p.ventas || 0) + q;
-      p.vendidosHoy = (p.vendidosHoy || 0) + q;
-    }
-  });
-  if (!lineas.length) { alert('Selecciona al menos un producto.'); return; }
-  const iva = config.iva || 0; const ivaAmt = base * iva / 100; const total = base + ivaAmt;
-  const ivaLinea = iva > 0 ? '\n🧾 Base: ' + base.toFixed(2) + '€ + IVA ' + iva + '%: ' + ivaAmt.toFixed(2) + '€' : '';
-  const comercialLinea = comercialNombre ? '\n👤 Comercial: ' + comercialNombre : '';
-
-  // Guardar pedido localmente
-  const pedido = { id: Date.now(), nombre, lineas, base, iva: ivaAmt, total, fecha: new Date().toLocaleString('es-ES'), comercialId, comercialNombre };
-  pedidos.unshift(pedido);
-  localStorage.setItem('ferro_pedidos', JSON.stringify(pedidos));
-  localStorage.setItem('ferro_productos', JSON.stringify(productos));
-
-  // Enviar a Google Sheets si está configurado
-  const scriptUrl = config.scriptUrl;
-  if (scriptUrl) {
-    fetch(scriptUrl, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(pedido)
-    }).catch(() => {});
-  }
-
-  const msg = '🛠️ *PEDIDO FERRETERÍA ALBALADEJO*\n\n👤 Cliente: *' + nombre + '*' + comercialLinea + '\n\n' + lineas.join('\n') + ivaLinea + '\n\n💰 *TOTAL: ' + total.toFixed(2).replace('.', ',') + '€*\n\n_Reserva desde la web de ofertas_';
-  window.open('https://wa.me/' + (config.wa || '34622663157') + '?text=' + encodeURIComponent(msg), '_blank');
-
-  // Notif y reset
-  const notif = document.getElementById('notif');
-  notif.classList.add('show'); setTimeout(() => notif.classList.remove('show'), 2500);
-  cantidades = {}; renderTienda();
-}
-
-// ── FLASH GLOBAL ──────────────────────────────────────────
-function tickClock() {
-  const sec = document.getElementById('flashSection');
-  if (!config.flashActiva || !config.flashFin) { sec.classList.remove('active'); return; }
-  const now = new Date(); const fin = new Date(config.flashFin); const ini = new Date(config.flashInicio || now);
-  if (now < ini || now > fin) { sec.classList.remove('active'); return; }
-  sec.classList.add('active');
-  document.getElementById('flashTitle').textContent = config.flashTitulo || 'Oferta especial';
-  document.getElementById('flashDesc').textContent = config.flashDesc || '';
-  const diff = Math.max(0, fin - now);
-  const d = Math.floor(diff / 86400000); const h = Math.floor((diff % 86400000) / 3600000);
-  const m = Math.floor((diff % 3600000) / 60000); const s = Math.floor((diff % 60000) / 1000);
-  document.getElementById('cd-d').textContent = String(d).padStart(2, '0');
-  document.getElementById('cd-h').textContent = String(h).padStart(2, '0');
-  document.getElementById('cd-m').textContent = String(m).padStart(2, '0');
-  document.getElementById('cd-s').textContent = String(s).padStart(2, '0');
-}
-
-// ── FLASH POR PRODUCTO ────────────────────────────────────
-function tickProductFlash() {
-  productos.forEach(p => {
-    const el = document.getElementById('flash-timer-' + p.id); if (!el) return;
-    const ahora = new Date(); const fin = new Date(p.flashFin);
-    const diff = Math.max(0, fin - ahora);
-    if (diff === 0) { el.innerHTML = ''; return; }
-    const d = Math.floor(diff / 86400000); const h = Math.floor((diff % 86400000) / 3600000);
-    const m = Math.floor((diff % 3600000) / 60000); const s = Math.floor((diff % 60000) / 1000);
-    const parts = d > 0 ? [['días', d], ['h', h], ['min', m], ['seg', s]] : [['h', h], ['min', m], ['seg', s]];
-    el.innerHTML = parts.map((x, i) => (i > 0 ? '<span class="cfsep">:</span>' : '') + '<div class="cfu"><div class="cfn">' + String(x[1]).padStart(2, '0') + '</div><div class="cfl">' + x[0] + '</div></div>').join('');
-  });
-}
-
-setInterval(tickClock, 1000);
-setInterval(tickProductFlash, 1000);
-tickClock();
-initHero();
+function cambiar(id,d){
+let q=cantidades[id]||0;
+q+=d;
+if(q<0)q=0;
+cantidades[id]=q;
 renderTienda();
+}
+
+function updateCart(){
+let total=0;
+productos.forEach(p=>{
+total+=(cantidades[p.id]||0)*p.venta;
+});
+document.getElementById('total').innerText=total.toFixed(2)+'€';
+}
+
+function enviar(){
+let msg='Pedido:\n';
+productos.forEach(p=>{
+let q=cantidades[p.id]||0;
+if(q>0) msg+=q+'x '+p.nombre+'\n';
+});
+window.open('https://wa.me/?text='+encodeURIComponent(msg));
+}
+
+/* ADMIN */
+function renderAdmin(){
+const wrap=document.getElementById('adminView');
+
+wrap.innerHTML=`
+<div class="admin">
+<h2>Panel Admin</h2>
+
+<button onclick="add()">➕ Añadir</button>
+
+<div id="list"></div>
+
+<button onclick="reset()">RESET</button>
+</div>
+`;
+
+renderAdminList();
+}
+
+function renderAdminList(){
+const list=document.getElementById('list');
+
+list.innerHTML=productos.map((p,i)=>`
+<div>
+<input value="${p.nombre}" onchange="edit(${i},'nombre',this.value)">
+<input value="${p.desc}" onchange="edit(${i},'desc',this.value)">
+<input type="number" value="${p.venta}" onchange="edit(${i},'venta',this.value)">
+<input type="number" value="${p.stock}" onchange="edit(${i},'stock',this.value)">
+<button onclick="del(${i})">X</button>
+</div>
+`).join('');
+}
+
+function edit(i,k,v){
+productos[i][k]=k==='venta'||k==='stock'?parseFloat(v):v;
+saveAll();
+}
+
+function del(i){
+productos.splice(i,1);
+saveAll();
+renderAdminList();
+}
+
+function add(){
+productos.push({id:Date.now(),nombre:'Nuevo',desc:'',venta:0,stock:0});
+saveAll();
+renderAdminList();
+}
+
+function reset(){
+localStorage.clear();
+location.reload();
+}
+
+/* INIT */
+if(isAdmin){
+document.getElementById('tiendaView').style.display='none';
+document.getElementById('adminView').style.display='block';
+renderAdmin();
+}else{
+renderTienda();
+}
+
 </script>
+
 </body>
 </html>
 
