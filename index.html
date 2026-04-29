@@ -8,144 +8,99 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
-/* 🔒 CSS ORIGINAL INTACTO */
 :root {
-  --orange:#FF4D00; --orange-dark:#cc3d00; --yellow:#FFB800;
+  --orange:#FF4D00; --yellow:#FFB800;
   --dark:#111; --darker:#0a0a0a; --mid:#1e1e1e;
   --card:#191919; --border:#2a2a2a; --text:#f0f0f0;
-  --muted:#777; --green:#00c853; --red:#ff3d3d;
+  --muted:#777; --green:#00c853;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'DM Sans',sans-serif;background:var(--darker);color:var(--text);min-height:100vh;}
-/* TODO tu CSS completo sigue EXACTAMENTE igual */
+body{font-family:'DM Sans',sans-serif;background:var(--darker);color:var(--text);}
+
+/* HERO */
+.hero{padding:12px;background:#111;border-bottom:2px solid var(--orange);}
+.hero h1{font-family:'Bebas Neue';font-size:28px;}
+.hero span{color:var(--orange);}
+
+/* GRID */
+.productos-grid{padding:16px;display:flex;flex-direction:column;gap:12px;}
+.producto-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px;}
+.card-name{font-size:20px;font-family:'Bebas Neue';}
+.price-main{color:var(--orange);font-size:22px;}
+
+/* CART */
+.cart-bar{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:2px solid var(--orange);padding:12px;display:flex;justify-content:space-between;}
 </style>
 </head>
 
 <body>
 
-<!-- TODO TU HTML ORIGINAL SIN CAMBIOS -->
 <div class="hero">
-  <div class="hero-inner">
-    <div id="heroLogoWrap"><div class="hero-logo-placeholder">🔧</div></div>
-    <div class="hero-text">
-      <div class="hero-tagline">🔥 Ofertas del día</div>
-      <h1 id="heroTitle">FERRETERÍA <span>ALBALADEJO</span></h1>
-      <p class="hero-sub" id="heroSub">Selecciona y reserva por WhatsApp</p>
-      <p class="hero-comercial" id="heroComercial"></p>
-    </div>
-  </div>
+  <h1>FERRETERÍA <span>ALBALADEJO</span></h1>
 </div>
 
 <div class="productos-grid" id="productosGrid"></div>
-<div class="spacer"></div>
 
 <div class="cart-bar">
-  <div class="cart-bar-inner">
-    <div class="cart-info">
-      <div class="cart-total" id="cartTotal">0,00€</div>
-    </div>
-    <button onclick="enviarWhatsApp()">Reservar pedido</button>
-  </div>
+  <div id="cartTotal">0,00€</div>
+  <button onclick="enviarWhatsApp()">Reservar</button>
 </div>
 
-<div class="notif" id="notif">✓ Pedido enviado</div>
-
 <script>
-/* =========================
-   CONFIG SEGURA
-========================= */
+/* CONFIG SEGURA */
 let config;
 try {
   config = JSON.parse(localStorage.getItem('ferro_config')) || {};
-} catch(e) {
-  config = {};
-}
+} catch(e) { config = {}; }
 
 config = Object.assign({
-  wa:'34622663157',
-  iva:0,
-  envioGlobal:false,
-  flashActiva:false,
-  nombre:'FERRETERÍA ALBALADEJO',
-  sub:'Selecciona y reserva por WhatsApp',
-  logo:null
+  wa:'34622663157'
 }, config);
 
-/* =========================
-   PRODUCTOS SEGUROS
-========================= */
+/* PRODUCTOS SEGUROS */
 let productos;
 try {
   productos = JSON.parse(localStorage.getItem('ferro_productos'));
-} catch(e) {
-  productos = null;
-}
+} catch(e) { productos = null; }
 
 if (!Array.isArray(productos)) {
   productos = [
-    {id:1,nombre:'WD-40 500ml',ref:'WD-001',emoji:'🛢️',desc:'Lubricante multiusos profesional.',venta:7.5,stock:10,precioAntes:8.9},
-    {id:2,nombre:'Guantes piel',ref:'GLV-002',emoji:'🧤',desc:'Guantes resistentes.',venta:1.35,stock:150},
-    {id:3,nombre:'Ventilador',ref:'VNT-003',emoji:'🌀',desc:'3 velocidades.',venta:64,stock:8},
-    {id:4,nombre:'Carretilla',ref:'CAR-004',emoji:'🛒',desc:'Carga 200kg.',venta:33.9,stock:0}
+    {id:1,nombre:'WD-40 500ml',venta:7.5},
+    {id:2,nombre:'Guantes piel',venta:1.35},
+    {id:3,nombre:'Ventilador',venta:64}
   ];
 }
 
 let cantidades = {};
 
-/* =========================
-   HERO SEGURO
-========================= */
-function initHero() {
-  const el = document.getElementById('heroTitle');
-  if (!el) return;
+/* RENDER ROBUSTO */
+function renderTienda(){
+  const grid=document.getElementById('productosGrid');
+  if(!grid) return;
 
-  const n = (config.nombre || '').toUpperCase().split(' ');
-  const last = n.pop() || '';
-  el.innerHTML = n.join(' ') + ' <span>' + last + '</span>';
-}
+  grid.innerHTML='';
 
-/* =========================
-   RENDER TIENDA (ROBUSTO)
-========================= */
-function renderTienda() {
-  const grid = document.getElementById('productosGrid');
-  if (!grid) return;
+  productos.forEach(p=>{
+    try{
+      const qty=cantidades[p.id]||0;
+      const precio=(p.venta||0).toFixed(2).replace('.',',');
 
-  grid.innerHTML = '';
-
-  productos.forEach(p => {
-    try {
-      const qty = cantidades[p.id] || 0;
-
-      const img = p.foto
-        ? `<img src="${p.foto}" style="width:100%">`
-        : `<div>${p.emoji || '📦'}</div>`;
-
-      grid.innerHTML += `
-      <div class="producto-card ${qty>0?'selected':''}">
-        ${img}
-        <div class="card-body">
-          <div class="card-name">${p.nombre || ''}</div>
-          <div class="card-desc">${p.desc || ''}</div>
-          <div class="price-main">${(p.venta||0).toString().replace('.',',')}€</div>
-
-          <button onclick="sumar(${p.id})">+</button>
-          <button onclick="restar(${p.id})">-</button>
-
-          <div>Qty: ${qty}</div>
-        </div>
+      grid.innerHTML+=`
+      <div class="producto-card">
+        <div class="card-name">${p.nombre||''}</div>
+        <div class="price-main">${precio}€</div>
+        <button onclick="sumar(${p.id})">+</button>
+        <button onclick="restar(${p.id})">-</button>
+        <div>${qty}</div>
       </div>`;
-    } catch(e) {
-      console.error("Error render producto", p, e);
+    }catch(e){
+      console.error("Error producto",p,e);
     }
   });
 
   updateCart();
 }
 
-/* =========================
-   QTY
-========================= */
 function sumar(id){
   cantidades[id]=(cantidades[id]||0)+1;
   renderTienda();
@@ -157,37 +112,23 @@ function restar(id){
   renderTienda();
 }
 
-/* =========================
-   CART
-========================= */
 function updateCart(){
   let total=0;
-
   productos.forEach(p=>{
     total += (cantidades[p.id]||0)*(p.venta||0);
   });
 
-  const el = document.getElementById('cartTotal');
-  if(el){
-    el.textContent = total.toFixed(2).replace('.',',') + '€';
-  }
+  document.getElementById('cartTotal').textContent =
+    total.toFixed(2).replace('.',',') + '€';
 }
 
-/* =========================
-   WHATSAPP
-========================= */
 function enviarWhatsApp(){
   const msg="Pedido desde web";
   window.open("https://wa.me/"+config.wa+"?text="+encodeURIComponent(msg),"_blank");
 }
 
-/* =========================
-   INIT
-========================= */
-document.addEventListener("DOMContentLoaded", () => {
-  initHero();
-  renderTienda();
-});
+/* INIT */
+document.addEventListener("DOMContentLoaded",renderTienda);
 </script>
 
 </body>
