@@ -1,286 +1,107 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ferretería Albaladejo</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans&display=swap" rel="stylesheet">
-
-<style>
-:root{
- --orange:#ff4d00;
- --bg:#0f0f0f;
- --card:#1a1a1a;
- --text:#fff;
- --muted:#777;
-}
-
-body{margin:0;background:var(--bg);color:var(--text);font-family:'DM Sans';}
-
-.hero{padding:15px;border-bottom:2px solid var(--orange);}
-.hero h1{font-family:'Bebas Neue';letter-spacing:2px;}
-.hero span{color:var(--orange);}
-
-.nombre{padding:15px;}
-.nombre input{
- width:100%;
- padding:14px;
- border-radius:10px;
- border:2px solid #333;
- background:#222;
- color:#fff;
- font-size:16px;
-}
-
-.grid{padding:15px;display:flex;flex-direction:column;gap:12px;}
-
-.card{background:var(--card);border-radius:12px;overflow:hidden;border:1px solid #222;}
-.card img{width:100%;aspect-ratio:1/1;object-fit:cover;}
-.card-body{padding:12px;}
-
-.price{font-size:24px;color:var(--orange);font-weight:bold;}
-
-.stock{font-size:12px;color:var(--muted);}
-
-.qty button{
- margin:4px;
- padding:8px 12px;
- border:none;
- background:#333;
- color:#fff;
- border-radius:6px;
-}
-
-.qty button.active{background:var(--orange);}
-
-.cart{
- position:fixed;bottom:0;left:0;right:0;
- background:#000;padding:10px;
- display:flex;justify-content:space-between;
- border-top:2px solid var(--orange);
-}
-
-.admin{
- display:none;
- background:#000;
- padding:15px;
-}
-
-.admin.active{display:block;}
-
-input,select{margin:5px 0;padding:8px;width:100%;}
-
-.flash{
- background:#2a0c00;
- border:2px solid var(--orange);
- padding:10px;
- margin:10px;
- border-radius:10px;
- text-align:center;
-}
-
-</style>
-</head>
-<body>
-
-<div class="hero">
-  <h1>FERRETERÍA <span>ALBALADEJO</span></h1>
-</div>
-
-<div id="flash" class="flash" style="display:none"></div>
-
-<div class="nombre">
-  <input id="cliente" placeholder="Tu nombre o empresa">
-</div>
-
-<div id="grid" class="grid"></div>
-
-<div class="admin" id="admin">
-
-<h2>CONFIG</h2>
-<input id="wa" placeholder="WhatsApp">
-<input id="iva" type="number" placeholder="IVA %">
-<button onclick="saveConfig()">Guardar</button>
-
-<h2>FLASH</h2>
-<input id="fTitulo" placeholder="Titulo">
-<input id="fFin" type="datetime-local">
-<button onclick="saveFlash()">Activar</button>
-
-<h2>PRODUCTO</h2>
-<input id="pNombre" placeholder="Nombre">
-<input id="pPrecio" type="number" placeholder="Precio">
-<input id="pStock" type="number" placeholder="Stock">
-<input id="pPresets" placeholder="Ej: 12,24,48">
-<button onclick="addProducto()">Añadir</button>
-
-<div id="lista"></div>
-
-</div>
-
-<div class="cart">
-  <div id="total">0€</div>
-  <button onclick="send()">Reservar</button>
-</div>
-
-<script>
-let productos=JSON.parse(localStorage.getItem("p"))||[
-{id:1,n:"WD-40",p:7.5,s:50,presets:[12,24,48]},
-{id:2,n:"Guantes",p:1.35,s:100}
-];
-
-let config=JSON.parse(localStorage.getItem("c"))||{wa:"34600000000",iva:0};
-let flash=JSON.parse(localStorage.getItem("f"))||null;
-let cart={};
-
-function render(){
- const g=document.getElementById("grid");
- g.innerHTML="";
-
- productos.forEach(p=>{
-  const q=cart[p.id]||0;
-  const agotado=p.s<=0;
-
-  g.innerHTML+=`
-  <div class="card">
-    <img src="https://via.placeholder.com/400">
-    <div class="card-body">
-      <h3>${p.n}</h3>
-      <div class="price">${p.p}€</div>
-      <div class="stock">${agotado?"AGOTADO":"Stock: "+p.s}</div>
-
-      ${agotado?"":renderQty(p,q)}
-
-      <div>${q>0?"Subtotal: "+(q*p.p).toFixed(2)+"€":""}</div>
-    </div>
-  </div>`;
- });
-
+function toggleAdmin(){
+ const p=document.getElementById("adminPanel");
+ p.style.display = p.style.display==="block" ? "none" : "block";
  renderAdmin();
- calcTotal();
- renderFlash();
 }
 
-function renderQty(p,q){
- if(p.presets){
-  return `<div class="qty">${
-   p.presets.map(v=>`<button onclick="setQty(${p.id},${v})" class="${q==v?"active":""}">${v}</button>`).join("")
-  }</div>`;
- }else{
-  return `<div class="qty">
-   <button onclick="inc(${p.id})">+</button>
-   ${q}
-   <button onclick="dec(${p.id})">-</button>
-  </div>`;
+// convertir imagen
+function toBase64(file){
+ return new Promise((res,rej)=>{
+  const r=new FileReader();
+  r.readAsDataURL(file);
+  r.onload=()=>res(r.result);
+ });
+}
+
+// CREAR PRODUCTO
+async function crearProducto(){
+ const file=document.getElementById("aFoto").files[0];
+ let img=null;
+
+ if(file){
+  img=await toBase64(file);
  }
-}
 
-function setQty(id,v){cart[id]=cart[id]==v?0:v;render();}
-function inc(id){cart[id]=(cart[id]||0)+1;render();}
-function dec(id){cart[id]=(cart[id]||0)-1;if(cart[id]<=0)delete cart[id];render();}
-
-function calcTotal(){
- let base=0;
- productos.forEach(p=>{base+=(cart[p.id]||0)*p.p});
- let iva=base*(config.iva/100);
- let total=base+iva;
-
- document.getElementById("total").innerHTML=
-  base.toFixed(2)+"€ + IVA "+iva.toFixed(2)+"€ = "+total.toFixed(2)+"€";
-}
-
-function send(){
- let nombre=document.getElementById("cliente").value;
- if(!nombre){alert("Pon tu nombre");return;}
-
- let txt=`Pedido ${nombre}\n\n`;
- productos.forEach(p=>{
-  const q=cart[p.id]||0;
-  if(q>0){
-   txt+=`${q}x ${p.n}\n`;
-   p.s-=q;
-  }
- });
-
- localStorage.setItem("p",JSON.stringify(productos));
-
- fetch("https://script.google.com/macros/s/TU_SCRIPT/exec",{
-  method:"POST",
-  body:JSON.stringify({nombre,cart})
- });
-
- window.open(`https://wa.me/${config.wa}?text=${encodeURIComponent(txt)}`);
-
- cart={};
- render();
-}
-
-function saveConfig(){
- config.wa=wa.value;
- config.iva=parseFloat(iva.value)||0;
- localStorage.setItem("c",JSON.stringify(config));
-}
-
-function saveFlash(){
- flash={
-  titulo:fTitulo.value,
-  fin:fFin.value
- };
- localStorage.setItem("f",JSON.stringify(flash));
-}
-
-function renderFlash(){
- if(!flash)return;
-
- const now=new Date();
- const fin=new Date(flash.fin);
-
- if(now>fin){document.getElementById("flash").style.display="none";return;}
-
- const diff=fin-now;
- const m=Math.floor(diff/60000);
-
- document.getElementById("flash").style.display="block";
- document.getElementById("flash").innerHTML=
-  `<b>${flash.titulo}</b><br>Termina en ${m} min`;
-}
-
-function addProducto(){
  productos.push({
   id:Date.now(),
-  n:pNombre.value,
-  p:parseFloat(pPrecio.value),
-  s:parseInt(pStock.value),
-  presets:pPresets.value?pPresets.value.split(",").map(x=>parseInt(x)):null
+  nombre:aNombre.value,
+  ref:'NEW',
+  desc:'',
+  venta:parseFloat(aPrecio.value),
+  stock:parseInt(aStock.value)||0,
+  vendidosHoy:0,
+  modoQty:'libre',
+  presets:[],
+  qtyMin:1,
+  qtyStep:1,
+  foto:img
  });
- saveProductos();
+
+ localStorage.setItem('ferro_productos', JSON.stringify(productos));
+ renderTienda();
+ renderAdmin();
 }
 
-function saveProductos(){
- localStorage.setItem("p",JSON.stringify(productos));
- render();
-}
-
-function del(id){
- productos=productos.filter(p=>p.id!==id);
- saveProductos();
-}
-
+// RENDER ADMIN
 function renderAdmin(){
- const l=document.getElementById("lista");
+ const l=document.getElementById("adminLista");
  l.innerHTML="";
+
  productos.forEach(p=>{
-  l.innerHTML+=`${p.n} <button onclick="del(${p.id})">❌</button><br>`;
+  l.innerHTML+=`
+  <div style="border:1px solid #333;padding:10px;margin:10px 0">
+    
+    <input value="${p.nombre}" onchange="editProd(${p.id},'nombre',this.value)">
+    <input type="number" value="${p.venta}" onchange="editProd(${p.id},'venta',this.value)">
+    <input type="number" value="${p.stock}" onchange="editProd(${p.id},'stock',this.value)">
+    
+    ${p.foto ? `<img src="${p.foto}" style="width:80px">` : ''}
+
+    <input type="file" onchange="changeImg(${p.id},this)">
+    
+    <button onclick="delProd(${p.id})">❌</button>
+  </div>`;
  });
 }
 
-document.body.addEventListener("dblclick",()=>{
- document.getElementById("admin").classList.toggle("active");
+// EDITAR
+function editProd(id,field,val){
+ const p=productos.find(x=>x.id===id);
+ p[field]=field==="venta"||field==="stock"?parseFloat(val):val;
+ localStorage.setItem('ferro_productos', JSON.stringify(productos));
+ renderTienda();
+}
+
+// BORRAR
+function delProd(id){
+ productos=productos.filter(p=>p.id!==id);
+ localStorage.setItem('ferro_productos', JSON.stringify(productos));
+ renderTienda();
+ renderAdmin();
+}
+
+// CAMBIAR FOTO
+async function changeImg(id,input){
+ const file=input.files[0];
+ if(!file)return;
+
+ const img=await toBase64(file);
+ const p=productos.find(x=>x.id===id);
+ p.foto=img;
+
+ localStorage.setItem('ferro_productos', JSON.stringify(productos));
+ renderTienda();
+ renderAdmin();
+}
+
+// LOGO
+document.getElementById("logoInput").addEventListener("change", async e=>{
+ const file=e.target.files[0];
+ if(!file)return;
+
+ const img=await toBase64(file);
+ config.logo=img;
+
+ localStorage.setItem('ferro_config', JSON.stringify(config));
+ initHero();
 });
-
-render();
-</script>
-
-</body>
-</html>
